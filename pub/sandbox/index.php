@@ -25,17 +25,6 @@
         //pobierz pierwotną nazwę pliku z tablicy $_FILES
         $sourceFileName = $_FILES['uploadedFile']['name'];
 
-        //wyciągnij pierwotne rozszerzenie pliku
-        $sourceFileExtension = pathinfo($sourceFileName, PATHINFO_EXTENSION);
-        //zmień litery rozszerzenia na małe
-        $sourceFileExtension = strtolower($sourceFileExtension);
-
-        //wygeneruj hash - nową nazwę pliku
-        $newFileName = hash("sha256", $sourceFileName) . hrtime(true)
-                            . "." . $sourceFileExtension;
-        //wygeneruj pełny docelowy URL
-        $targetURL = $targetDir . $newFileName;
-
         //pobierz tymczasową ścieżkę do pliku na serwerze
         $tempURL = $_FILES['uploadedFile']['tmp_name'];
 
@@ -44,6 +33,26 @@
         if(!is_array($imgInfo)) {
             die("BŁĄD: Przekazany plik nie jest obrazem!");
         }
+
+        //wyciągnij pierwotne rozszerzenie pliku
+        //$sourceFileExtension = pathinfo($sourceFileName, PATHINFO_EXTENSION);
+        //zmień litery rozszerzenia na małe
+        //$sourceFileExtension = strtolower($sourceFileExtension);
+        /// niepotrzebne - generujemy webp
+
+        //wygeneruj hash - nową nazwę pliku
+        $newFileName = hash("sha256", $sourceFileName) . hrtime(true)
+                            . ".webp";
+
+        //zaczytujemy cały obraz z folderu tymczasowego do stringa
+        $imageString = file_get_contents($tempURL);
+
+        //generujemy obraz jako obiekt klasy GDImage
+        //@ przed nazwa funkcji powoduje zignorowanie ostrzeżeń
+        $gdImage = @imagecreatefromstring($imageString);
+
+        //wygeneruj pełny docelowy URL
+        $targetURL = $targetDir . $newFileName;
 
         //zbuduj docelowy URL pliku na serwerze
         //$targetURL = $targetDir . $sourceFileName;
@@ -55,7 +64,11 @@
         }
 
         //przesuń plik do docelowej lokalizacji
-        move_uploaded_file($tempURL, $targetURL);
+        //move_uploaded_file($tempURL, $targetURL);
+        //nieaktualne - generujemy webp
+        imagewebp($gdImage, $targetURL);
+
+
         echo "Plik został poprawnie wgrany na serwer";
     }
     ?>
