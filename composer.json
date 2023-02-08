@@ -1,0 +1,17 @@
+{
+    "name": "machinacyfrowa/cms",
+    "description": "Prosty system CMS do strony z memami",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Machinacyfrowa\\Cms\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Paweł Zawadzki",
+            "email": "admin@machinacyfrowa.pl"
+        }
+    ],
+    "require": {}
+}
