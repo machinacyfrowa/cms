@@ -41,7 +41,7 @@
         /// niepotrzebne - generujemy webp
 
         //wygeneruj hash - nową nazwę pliku
-        $newFileName = hash("sha256", $sourceFileName) . hrtime(true)
+        $newFileName = hash("sha256", $sourceFileName . hrtime(true) )
                             . ".webp";
 
         //zaczytujemy cały obraz z folderu tymczasowego do stringa
