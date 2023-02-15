@@ -41,8 +41,8 @@
         /// niepotrzebne - generujemy webp
 
         //wygeneruj hash - nową nazwę pliku
-        $newFileName = hash("sha256", $sourceFileName . hrtime(true) )
-                            . ".webp";
+        $hash = hash("sha256", $sourceFileName . hrtime(true) );
+        $newFileName = $hash . ".webp";
 
         //zaczytujemy cały obraz z folderu tymczasowego do stringa
         $imageString = file_get_contents($tempURL);
@@ -68,6 +68,12 @@
         //nieaktualne - generujemy webp
         imagewebp($gdImage, $targetURL);
 
+        $db = new mysqli('localhost', 'root', '', 'cms');
+        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?)");
+        $dbTimestamp = date("Y-m-d H:i:s");
+        $query->bind_param("ss", $dbTimestamp, $hash);
+        if(!$query->execute())
+            die("Błąd zapisu do bazy danych");
 
         echo "Plik został poprawnie wgrany na serwer";
     }
