@@ -17,3 +17,8 @@ require('./../src/config.php');
         Post::upload($_FILES['uploadedFile']['tmp_name']);
     }
 ?>
+
+Ostatni post:
+<?php
+var_dump(Post::getLast());
+?>
