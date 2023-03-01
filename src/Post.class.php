@@ -28,6 +28,17 @@ class Post {
         //zapisujemy w formacie webp
         imagewebp($gdImage, $newFileName);
 
+        //użyj globalnego połączenia
+        global $db;
+        //stwórz kwerendę
+        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?)");
+        //przygotuj znacznik czasu dla bazy danych
+        $dbTimestamp = date("Y-m-d H:i:s");
+        //zapisz dane do bazy
+        $query->bind_param("ss", $dbTimestamp, $newFileName);
+        if(!$query->execute())
+            die("Błąd zapisu do bazy danych");
+
     }
 }
 
