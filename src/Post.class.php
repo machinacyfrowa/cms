@@ -10,6 +10,7 @@ class Post {
         $this->timestamp = $t;
     }
 
+    //funkcja zwraca ostatnio dodany obrazek
     static function getLast() : Post {
         //odwołuję się do bazy danych
         global $db;
@@ -25,6 +26,30 @@ class Post {
         $p = new Post($row['id'], $row['filename'], $row['timestamp']);
         //zwracanie obiektu
         return $p; 
+    }
+
+    //funkcja zwraca jedna stronę obrazków
+    static function getPage(int $pageNumber = 1, int $postsPerPage = 10) : array {
+        //połączenie z bazą
+        global $db;
+        //kwerenda
+        $query = $db->prepare("SELECT * FROM post ORDER BY timestamp DESC LIMIT ? OFFSET ?");
+        //oblicz przesunięcie - numer strony * ilość zdjęć na stronie
+        $offset = ($pageNumber-1)*$postsPerPage;
+        //podstaw do kwerendy
+        $query->bind_param('ii', $postsPerPage, $offset);
+        //wywołaj kwerendę
+        $query->execute();
+        //odbierz wyniki
+        $result = $query->get_result();
+        //stwórz tablicę na obiekty
+        $postsArray = array();
+        //pobieraj wiersz po wierszu jako tablicę asocjacyjną indeksowaną nazwami kolumn z mysql
+        while($row = $result->fetch_assoc()) {
+            $post = new Post($row['id'],$row['filename'],$row['timestamp']);
+            array_push($postsArray, $post);
+        }
+        return $postsArray;
     }
 
     static function upload(string $tempFileName) {

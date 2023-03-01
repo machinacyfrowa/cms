@@ -19,6 +19,7 @@ require('./../src/config.php');
 ?>
 
 Ostatni post:
+<pre>
 <?php
-var_dump(Post::getLast());
+var_dump(Post::getPage());
 ?>
