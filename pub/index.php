@@ -15,5 +15,15 @@ Route::add('/upload', function() {
     $twig->display("upload.html.twig");
 });
 
+Route::add('/upload', function() {
+    //wywoła się tylko po otrzymaniu danych metodą post na ten url
+    // (po wypełnieniu formularza)
+    global $twig;
+    if(isset($_POST['submit']))  {
+        Post::upload($_FILES['uploadedFile']['tmp_name']);
+    }
+    $twig->display("index.html.twig");
+}, 'post');
+
 Route::run('/cms/pub');
 ?>
