@@ -13,6 +13,17 @@ Route::add('/upload' , function() {
     $twig->display("upload.html.twig");
 });
 
+Route::add('/upload', function() {
+    //ta funkcja się uruchamia po wysłaniu formularza
+    global $twig;
+
+    $tempFileName = $_FILES['uploadedFile']['tmp_name'];
+    Post::upload($tempFileName);
+
+    //na koniec wyświetlaj główną stronę
+    $twig->display("index.html.twig");
+}, 'post');
+
 Route::run('/cms/pub');
 
 ?>
