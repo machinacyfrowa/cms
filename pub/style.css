@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+div#pageContainer {
+    max-width: 960px;
+    margin: 0 auto;
+}
+h1 {
+    text-align: center;
+}
+div#post {
+    background-color: lightgray;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+div#post img {
+    width: 100%;
+}

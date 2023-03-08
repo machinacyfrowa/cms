@@ -1,10 +1,12 @@
 {% include 'header.html.twig' %}
-<h1>Wgraj obrazek</h1>
-<form action="" method="post" enctype="multipart/form-data">
-    <label for="uploadedFileInput">
-        Wybierz plik do wgrania na serwer:
-    </label><br>
-    <input type="file" name="uploadedFile" id="uploadedFileInput" required><br>
-    <input type="submit" value="Wyślij plik" name="submit"><br>
-</form>
-{% include 'footer.html.twig' %} 
+<div id="pageContainer">
+    <h1>{{ pageTitle|default("Brak tytułu podstrony")}}</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        <label for="uploadedFileInput">
+            Wybierz plik do wgrania na serwer:
+        </label><br>
+        <input type="file" name="uploadedFile" id="uploadedFileInput" required><br>
+        <input type="submit" value="Wyślij plik" name="submit"><br>
+    </form>
+</div>
+{% include 'footer.html.twig' %}
