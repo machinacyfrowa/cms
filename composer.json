@@ -13,5 +13,7 @@
             "email": "admin@machinacyfrowa.pl"
         }
     ],
-    "require": {}
+    "require": {
+        "steampixel/simple-php-router": "^0.7.1"
+    }
 }
