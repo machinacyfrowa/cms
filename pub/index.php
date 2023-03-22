@@ -20,7 +20,8 @@ Route::add('/upload', function() {
     global $twig;
 
     $tempFileName = $_FILES['uploadedFile']['tmp_name'];
-    Post::upload($tempFileName);
+    $title = $_POST['title'];
+    Post::upload($tempFileName, $title);
 
     //na koniec wyświetlaj główną stronę
     $twig->display("index.html.twig");
