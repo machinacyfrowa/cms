@@ -5,7 +5,7 @@ class Post {
     private string $timestamp;
     private string $title;
     //id użytkownika który wgrał mema
-    private string $authorId;
+    private int $authorId;
     //nazwa użytkownika autora mema
     private string $authorName;
 
