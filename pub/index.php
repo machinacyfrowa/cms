@@ -23,8 +23,8 @@ Route::add('/upload', function() {
     $title = $_POST['title'];
     Post::upload($tempFileName, $title);
 
-    //na koniec wyświetlaj główną stronę
-    $twig->display("index.html.twig");
+    //na koniec wyświetlaj główną stronę - przekierowanie
+    header("Location: //" . $_SERVER['HTTP_HOST'] ."/cms/pub/");
 }, 'post');
 
 Route::run('/cms/pub');
