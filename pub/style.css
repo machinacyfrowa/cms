@@ -1,0 +1,13 @@
+h1 {
+    text-align: center;
+}
+article.post {
+    width: 50vw;
+    margin: 0 auto;
+    background-color: #ccc;
+    padding: 4vh 2vw;
+    margin-bottom: 2rem;
+}
+article.post img {
+    width: 100%;
+}

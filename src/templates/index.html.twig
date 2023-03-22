@@ -5,6 +5,9 @@
     <article class="post">
         <h2 class="postTitle">{{ post.getTitle() }}</h2>
         <img src="{{ post.getFilename() }}">
+        <h6 class=""postMeta>
+            Data publikacji: {{ post.getTimestamp() }}
+        </h6>
     </article>    
     {% endfor %}
 </div>
