@@ -25,7 +25,7 @@ Route::add('/upload', function() {
     // (po wypełnieniu formularza)
     global $twig;
     if(isset($_POST['submit']))  {
-        Post::upload($_FILES['uploadedFile']['tmp_name']);
+        Post::upload($_FILES['uploadedFile']['tmp_name'], $_POST['title']);
     }
     //TODO: zmienić na ścieżkę względną
     header("Location: http://localhost/cms/pub");
