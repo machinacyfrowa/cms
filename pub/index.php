@@ -1,5 +1,7 @@
 <?php
 require_once('./../src/config.php');
+//musi być wywołane zanim jakikolwiek content trafi do przeglądarki użytkownika
+session_start();
 
 use Steampixel\Route;
 
@@ -9,7 +11,11 @@ Route::add('/', function() {
     //pobierz 10 najnowszych postów
     $postArray = Post::getPage();
     $twigData = array("postArray" => $postArray,
-                        "pageTitle" => "Strona główna");
+                        "pageTitle" => "Strona główna",
+                        );
+    //jeśli użytkownik jest zalogowany to przekaż go do twiga
+    if(isset($_SESSION['user']))
+        $twigData['user'] = $_SESSION['user'];
     $twig->display("index.html.twig", $twigData);
 });
 
@@ -17,6 +23,9 @@ Route::add('/upload', function() {
     //strona z formularzem do wgrywania obrazków
     global $twig;
     $twigData = array("pageTitle" => "Wgraj mema");
+    //jeśli użytkownik jest zalogowany to przekaż go do twiga
+    if(isset($_SESSION['user']))
+        $twigData['user'] = $_SESSION['user'];
     $twig->display("upload.html.twig", $twigData);
 });
 
@@ -25,7 +34,7 @@ Route::add('/upload', function() {
     // (po wypełnieniu formularza)
     global $twig;
     if(isset($_POST['submit']))  {
-        Post::upload($_FILES['uploadedFile']['tmp_name'], $_POST['title']);
+        Post::upload($_FILES['uploadedFile']['tmp_name'], $_POST['title'], $_POST['userId']);
     }
     //TODO: zmienić na ścieżkę względną
     header("Location: http://localhost/cms/pub");
@@ -43,6 +52,21 @@ Route::add('/register', function(){
         User::register($_POST['email'], $_POST['password']);
         header("Location: http://localhost/cms/pub");
     }
+}, 'post');
+
+Route::add('/login', function(){
+    global $twig;
+    $twigData = array("pageTitle" => "Zaloguj użytkownika");
+    $twig->display("login.html.twig", $twigData);
+});
+
+Route::add('/login', function() {
+    global $twig;
+    if(isset($_POST['submit'])) {
+        User::login($_POST['email'], $_POST['password']);
+    }
+    header("Location: http://localhost/cms/pub");
+
 }, 'post');
 
 Route::run('/cms/pub');

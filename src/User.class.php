@@ -1,18 +1,35 @@
 <?php
 class User {
-    private $email;
+    //id użytkownika w bazie danych
+    private int $id;
+    //login / email użytkownika w bazie danych
+    private string $email;
 
-
-    public function __construct($email) {
+    //konstruktor
+    public function __construct(int $id, string $email) {
+        $this->id = $id;
         $this->email = $email;
 
     }
 
     //gettery
+    public function getId() : int {
+        return $this->id;
+    }
     public function getName() : string {
         return $this->email;
     }
-
+    //pobieranie nazwy użytkownika według jego id - potrzebne do wyświetlania autorów postów
+    public static function getNameById(int $userId) : string {
+        global $db;
+        $query = $db->prepare("SELECT email FROM user WHERE id = ? LIMIT 1");
+        $query->bind_param('i', $userId);
+        $query->execute();
+        $result = $query->get_result();
+        $row = $result->fetch_assoc();
+        return $row['email'];
+    }
+    //zarejestrowanie nowego użytkownika
     public static function register(string $email, string $password) : bool {
         global $db;
         $query = $db->prepare("INSERT INTO user VALUES (NULL, ?, ?)");
@@ -20,7 +37,7 @@ class User {
         $query->bind_param('ss', $email, $passwordHash);
         return $query->execute();
     }
-
+    //zalogowanie istniejącego użytkownika
     public static function login(string $email, string $password) {
         global $db;
         $query = $db->prepare("SELECT * FROM user WHERE email = ? LIMIT 1");
@@ -29,9 +46,10 @@ class User {
         $result = $query->get_result();
         $row = $result->fetch_assoc();
         $passwordHash = $row['password'];
+        //jeżeli autoryzacja się powiedzie to zapisz użytkownika jako obiekt w sesji
         if(password_verify($password, $passwordHash)) {
             //hasła są zgodne - możemy zalogować użytkownika
-            $u = new User($email);
+            $u = new User($row['id'], $email);
             $_SESSION['user'] = $u;
         }
     }

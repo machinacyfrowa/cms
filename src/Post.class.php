@@ -4,12 +4,20 @@ class Post {
     private string $filename;
     private string $timestamp;
     private string $title;
+    //id użytkownika który wgrał mema
+    private string $authorId;
+    //nazwa użytkownika autora mema
+    private string $authorName;
 
-    function __construct(int $i, string $f, string $t, string $title) {
+    function __construct(int $i, string $f, string $t, string $title, int $authorId ) {
         $this->id = $i;
         $this->filename = $f;
         $this->timestamp = $t;
         $this->title = $title;
+        $this->authorId = $authorId;
+        //pobierz z bazy danych imię / login autora posta
+        global $db;
+        $this->authorName = User::getNameById($this->authorId);
     }
 
     public function getFilename() : string {
@@ -20,6 +28,9 @@ class Post {
     }
     public function getTitle() : string {
         return $this->title;
+    }
+    public function getAuthorName() : string {
+        return $this->authorName;
     }
 
     //funkcja zwraca ostatnio dodany obrazek
@@ -35,7 +46,7 @@ class Post {
         //przetwarzanie na tablicę asocjacyjną - bez pętli bo będzie tylko jeden
         $row = $result->fetch_assoc();
         //tworzenie obiektu
-        $p = new Post($row['id'], $row['filename'], $row['timestamp'], $row['title']);
+        $p = new Post($row['id'], $row['filename'], $row['timestamp'], $row['title'], $row['userId']);
         //zwracanie obiektu
         return $p; 
     }
@@ -58,13 +69,13 @@ class Post {
         $postsArray = array();
         //pobieraj wiersz po wierszu jako tablicę asocjacyjną indeksowaną nazwami kolumn z mysql
         while($row = $result->fetch_assoc()) {
-            $post = new Post($row['id'],$row['filename'],$row['timestamp'], $row['title']);
+            $post = new Post($row['id'],$row['filename'],$row['timestamp'], $row['title'], $row['userId']);
             array_push($postsArray, $post);
         }
         return $postsArray;
     }
 
-    static function upload(string $tempFileName, string $title) {
+    static function upload(string $tempFileName, string $title, int $userId) {
         //deklarujemy folder do którego będą zaczytywane obrazy
         $targetDir = "img/";
         //sprawdź czy mamy do czynienia z obrazem
@@ -95,11 +106,11 @@ class Post {
         //użyj globalnego połączenia
         global $db;
         //stwórz kwerendę
-        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?)");
+        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?, ?)");
         //przygotuj znacznik czasu dla bazy danych
         $dbTimestamp = date("Y-m-d H:i:s");
         //zapisz dane do bazy
-        $query->bind_param("sss", $dbTimestamp, $newFileName, $title);
+        $query->bind_param("sssi", $dbTimestamp, $newFileName, $title, $userId);
         if(!$query->execute())
             die("Błąd zapisu do bazy danych");
 
