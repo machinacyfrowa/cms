@@ -61,9 +61,17 @@ Route::add('/login', function(){
 Route::add('/login', function() {
     global $twig;
     if(isset($_POST['submit'])) {
-        User::login($_POST['email'], $_POST['password']);
+        if(User::login($_POST['email'], $_POST['password'])) {
+            //jeśli zalogowano poprawnie to wyświetl główną stronę
+            header("Location: http://localhost/cms/pub");
+        } else {
+            //jeśli nie zalogowano poprawnie wyświetl ponownie stronę logowania z komunikatem
+            $twigData = array("pageTitle" => "Zaloguj użytkownika",
+                                "message" => "Niepoprawny użytkownik lub hasło");
+            $twig->display("login.html.twig", $twigData);
+        }
     }
-    header("Location: http://localhost/cms/pub");
+    
 
 }, 'post');
 
