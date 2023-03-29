@@ -28,7 +28,7 @@ Route::add('/upload', function() {
     }
     else {
         //zwróć kod 403 czyli zabronione
-        header('HTTP/1.0 403 Forbidden');
+        http_response_code(403);
     }    
 });
 
