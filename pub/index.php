@@ -22,9 +22,14 @@ Route::add('/upload', function() {
     global $twig;
     $twigData = array("pageTitle" => "Wgraj mema");
     //jeśli użytkownik jest zalogowany to przekaż go do twiga
-    if(isset($_SESSION['user']))
+    if(User::isAuth()) {
         $twigData['user'] = $_SESSION['user'];
-    $twig->display("upload.html.twig", $twigData);
+        $twig->display("upload.html.twig", $twigData);
+    }
+    else {
+        //zwróć kod 403 czyli zabronione
+        header('HTTP/1.0 403 Forbidden');
+    }    
 });
 
 Route::add('/upload', function() {

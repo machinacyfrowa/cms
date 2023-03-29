@@ -19,6 +19,19 @@ class User {
     public function getName() : string {
         return $this->email;
     }
+    public static function isAuth() : bool {
+
+        //sprawdz czy w sesji jest coś pod nazwą user
+        if(isset($_SESSION['user'])) {
+            //sprawdz czy to coś jest instacją klasy User
+            if($_SESSION['user'] instanceof User) {
+                //użytkownik zalogowany
+                return true;
+            }
+        }
+        //użytkownik niezalogowany
+        return false;
+    }
     //pobieranie nazwy użytkownika według jego id - potrzebne do wyświetlania autorów postów
     public static function getNameById(int $userId) : string {
         global $db;
@@ -44,7 +57,7 @@ class User {
         $query->bind_param('s', $email);
         $query->execute();
         $result = $query->get_result();
-        
+
         //jeśli nie ma takiego konta zwróć false
         if($result->num_rows == 0)
             return false;
