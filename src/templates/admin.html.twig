@@ -1,0 +1,24 @@
+{% include 'header.html.twig' %}
+<div id="pageContainer">
+<table>
+    <tr>
+    <th>Miniatura</th>
+    <th>Tytuł</th>
+    <th>Autor</th>
+    <th>Czas</th>
+    </tr>
+    {% for post in postArray %}
+        <tr>
+        <td><img class="thumbnail"
+                src="{{post.getFilename()}}"></td>
+        <td>{{ post.getTitle() }} </td>
+        
+        <td>{{post.getAuthorName() }}</td>
+        <td>{{ post.getTimestamp() }} </td>
+        <tr>
+    {% endfor %}
+</table>
+</div>
+
+
+{% include 'footer.html.twig' %}
