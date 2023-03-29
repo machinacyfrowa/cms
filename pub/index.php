@@ -1,6 +1,6 @@
 <?php
 require("./../src/config.php");
-
+session_start();
 use Steampixel\Route;
 
 Route::add('/', function() {
