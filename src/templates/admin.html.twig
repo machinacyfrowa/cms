@@ -6,6 +6,7 @@
         <th>Znacznik czasu</th>
         <th>Tytuł</th>
         <th>Autor</th>
+        <th>Ban</th>
     </tr>
     {% for post in postList %}
         <tr>
@@ -13,6 +14,9 @@
         <td>{{ post.getTimestamp() }}</td>
         <td>{{ post.getTitle() }}</td> 
         <td>{{ post.getAuthorName() }}</td>
+        <td><a href="admin/remove/{{ post.getId() }}">
+            <button>Ukryj</button>
+        </a></td>
         </tr>
     {% endfor %}
     </table>

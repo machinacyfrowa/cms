@@ -91,6 +91,14 @@ Route::add('/admin', function() {
     }
 });
 
+Route::add('/admin/remove/([0-9]*)', function($id) {
+    if(User::isAuth()) {
+        Post::remove($id);
+        header("Location: http://localhost/cms/pub/admin");
+    } else {
+        http_response_code(403);
+    }
+});
 
 Route::run('/cms/pub');
 

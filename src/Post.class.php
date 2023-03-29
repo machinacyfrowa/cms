@@ -33,6 +33,9 @@ class Post {
     public function getAuthorName() : string {
         return $this->authorName;
     }
+    public function getId() : string {
+        return $this->id;
+    }
 
     //funkcja zwraca ostatnio dodany obrazek
     static function getLast() : Post {
@@ -57,7 +60,7 @@ class Post {
         //połączenie z bazą
         global $db;
         //kwerenda
-        $query = $db->prepare("SELECT * FROM post ORDER BY timestamp DESC LIMIT ? OFFSET ?");
+        $query = $db->prepare("SELECT * FROM post WHERE removed = false ORDER BY timestamp DESC LIMIT ? OFFSET ?");
         //oblicz przesunięcie - numer strony * ilość zdjęć na stronie
         $offset = ($pageNumber-1)*$postsPerPage;
         //podstaw do kwerendy
@@ -107,7 +110,7 @@ class Post {
         //użyj globalnego połączenia
         global $db;
         //stwórz kwerendę
-        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?, ?)");
+        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?, ?, false)");
         //przygotuj znacznik czasu dla bazy danych
         $dbTimestamp = date("Y-m-d H:i:s");
         //zapisz dane do bazy
@@ -115,6 +118,15 @@ class Post {
         if(!$query->execute())
             die("Błąd zapisu do bazy danych");
 
+    }
+    public static function remove(int $id) : bool {
+        global $db;
+        $query = $db->prepare("UPDATE post SET removed = true WHERE id = ?");
+        $query->bind_param('i', $id);
+        if($query->execute())
+            return true;
+        else
+            return false;
     }
 }
 
