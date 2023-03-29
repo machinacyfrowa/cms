@@ -3,28 +3,39 @@ require("./../src/config.php");
 
 use Steampixel\Route;
 
-Route::add('/' , function() {
+Route::add('/', function() {
+    //strona wyświetlająca obrazki
     global $twig;
-    $posts = Post::getPage();
-    $t = array("posts" => $posts);
-    $twig->display("index.html.twig", $t);
-});
-
-Route::add('/upload' , function() {
-    global $twig;
-    $twig->display("upload.html.twig");
+    //pobierz 10 najnowszych postów
+    $postArray = Post::getPage();
+    $twigData = array("postArray" => $postArray,
+                        "pageTitle" => "Strona główna",
+                        );
+    //jeśli użytkownik jest zalogowany to przekaż go do twiga
+    if(isset($_SESSION['user']))
+        $twigData['user'] = $_SESSION['user'];
+    $twig->display("index.html.twig", $twigData);
 });
 
 Route::add('/upload', function() {
-    //ta funkcja się uruchamia po wysłaniu formularza
+    //strona z formularzem do wgrywania obrazków
     global $twig;
+    $twigData = array("pageTitle" => "Wgraj mema");
+    //jeśli użytkownik jest zalogowany to przekaż go do twiga
+    if(isset($_SESSION['user']))
+        $twigData['user'] = $_SESSION['user'];
+    $twig->display("upload.html.twig", $twigData);
+});
 
-    $tempFileName = $_FILES['uploadedFile']['tmp_name'];
-    $title = $_POST['title'];
-    Post::upload($tempFileName, $title);
-
-    //na koniec wyświetlaj główną stronę - przekierowanie
-    header("Location: //" . $_SERVER['HTTP_HOST'] ."/cms/pub/");
+Route::add('/upload', function() {
+    //wywoła się tylko po otrzymaniu danych metodą post na ten url
+    // (po wypełnieniu formularza)
+    global $twig;
+    if(isset($_POST['submit']))  {
+        Post::upload($_FILES['uploadedFile']['tmp_name'], $_POST['title'], $_POST['userId']);
+    }
+    //TODO: zmienić na ścieżkę względną
+    header("Location: http://localhost/cms/pub");
 }, 'post');
 
 Route::add('/register', function() {
