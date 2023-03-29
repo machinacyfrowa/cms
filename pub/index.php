@@ -27,6 +27,36 @@ Route::add('/upload', function() {
     header("Location: //" . $_SERVER['HTTP_HOST'] ."/cms/pub/");
 }, 'post');
 
+Route::add('/register', function() {
+    global $twig;
+    $twigData = array("pageTitle" => "Zarejestruj użytkownika");
+    $twig->display("register.html.twig", $twigData);
+});
+
+Route::add('/register', function(){
+    global $twig;
+    if(isset($_POST['submit'])) {
+        User::register($_POST['email'], $_POST['password']);
+        header("Location: http://localhost/cms/pub");
+    }
+}, 'post');
+
+Route::add('/login', function(){
+    global $twig;
+    $twigData = array("pageTitle" => "Zaloguj użytkownika");
+    $twig->display("login.html.twig", $twigData);
+});
+
+Route::add('/login', function() {
+    global $twig;
+    if(isset($_POST['submit'])) {
+        User::login($_POST['email'], $_POST['password']);
+    }
+    header("Location: http://localhost/cms/pub");
+
+}, 'post');
+
+
 Route::run('/cms/pub');
 
 ?>
