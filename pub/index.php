@@ -80,6 +80,17 @@ Route::add('/login', function() {
 
 }, 'post');
 
+Route::add('/admin', function() {
+    global $twig;
+    if(User::isAuth()) {
+        $postsList = Post::getPage(1, 100);
+        $twigData = array("postList" => $postsList);
+        $twig->display("admin.html.twig", $twigData);
+    } else {
+        http_response_code(403);
+    }
+});
+
 
 Route::run('/cms/pub');
 

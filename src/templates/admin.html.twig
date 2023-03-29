@@ -1,0 +1,18 @@
+{% include 'header.html.twig' %}
+<div id="pageContainer">
+    <table>
+    <tr>
+        <th>Znacznik czasu</th>
+        <th>Tytuł</th>
+        <th>Autor</th>
+    </tr>
+    {% for post in postList %}
+        <tr>
+        <td>{{ post.getTimestamp() }}</td>
+        <td>{{ post.getTitle() }}</td> 
+        <td>{{ post.getAuthorName() }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% include 'footer.html.twig' %}
