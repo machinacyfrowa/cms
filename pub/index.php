@@ -24,9 +24,14 @@ Route::add('/upload', function() {
     global $twig;
     $twigData = array("pageTitle" => "Wgraj mema");
     //jeśli użytkownik jest zalogowany to przekaż go do twiga
-    if(isset($_SESSION['user']))
+    if(User::isAuth())
+    {
         $twigData['user'] = $_SESSION['user'];
-    $twig->display("upload.html.twig", $twigData);
+        $twig->display("upload.html.twig", $twigData);
+    } else {
+        http_response_code(403);
+    }
+        
 });
 
 Route::add('/upload', function() {
