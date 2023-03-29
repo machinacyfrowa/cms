@@ -6,6 +6,7 @@
     <th>Tytuł</th>
     <th>Autor</th>
     <th>Czas</th>
+    <th>Wyklucz</th>
     </tr>
     {% for post in postArray %}
         <tr>
@@ -15,6 +16,9 @@
         
         <td>{{post.getAuthorName() }}</td>
         <td>{{ post.getTimestamp() }} </td>
+        <td>
+        <a href="admin/remove/{{post.getId()}}">BAN</a>
+        </td>
         <tr>
     {% endfor %}
 </table>

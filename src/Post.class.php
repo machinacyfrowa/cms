@@ -20,6 +20,9 @@ class Post {
         $this->authorName = User::getNameById($this->authorId);
     }
 
+    public function getId() : int {
+        return $this->id;
+    }
     public function getFilename() : string {
         return $this->filename;
     }
@@ -56,7 +59,7 @@ class Post {
         //połączenie z bazą
         global $db;
         //kwerenda
-        $query = $db->prepare("SELECT * FROM post ORDER BY timestamp DESC LIMIT ? OFFSET ?");
+        $query = $db->prepare("SELECT * FROM post WHERE removed = 0 ORDER BY timestamp DESC LIMIT ? OFFSET ?");
         //oblicz przesunięcie - numer strony * ilość zdjęć na stronie
         $offset = ($pageNumber-1)*$postsPerPage;
         //podstaw do kwerendy
@@ -114,6 +117,12 @@ class Post {
         if(!$query->execute())
             die("Błąd zapisu do bazy danych");
 
+    }
+    public static function remove($id) : bool {
+        global $db;
+        $query = $db->prepare("UPDATE post SET removed = 1 WHERE id = ?");
+        $query->bind_param("i", $id);
+        return $query->execute();
     }
 }
 
