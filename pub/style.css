@@ -11,3 +11,6 @@ article.post {
 article.post img {
     width: 100%;
 }
+img.thumbnail {
+    max-width: 300px;
+}

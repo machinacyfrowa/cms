@@ -2,12 +2,14 @@
 <div id="pageContainer">
     <table>
     <tr>
+        <th>Miniatura</th>
         <th>Znacznik czasu</th>
         <th>Tytuł</th>
         <th>Autor</th>
     </tr>
     {% for post in postList %}
         <tr>
+        <td><img src="{{ post.getFilename() }}" class="thumbnail"></td>
         <td>{{ post.getTimestamp() }}</td>
         <td>{{ post.getTitle() }}</td> 
         <td>{{ post.getAuthorName() }}</td>
