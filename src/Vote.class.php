@@ -1,8 +1,9 @@
 <?php
 class Vote {
     /*
-    Deklarujemy sobie w bazie tabelę, 3 kolumny - id, value, user_id gdzie:
+    Deklarujemy sobie w bazie tabelę, 3 kolumny - id, post_id, value, user_id gdzie:
     id - int autoincrement
+    post_id - int, klucz zewnętrzny - post do którego należy głos
     value - int (-1,1)
     user_id - int, klucz obcy do user.id
     */
@@ -10,25 +11,30 @@ class Vote {
     public static function upVote(int $postId, int $userId) : bool {
         //kod do dodawania upvotów
         global $db;
-        $query = $db->prepare("INSERT INTO vote VALUES (NULL, 1, ?)");
-        $query->bind_param('i', $userId);
+        $query = $db->prepare("INSERT INTO vote VALUES (NULL, ?, 1, ?)");
+        $query->bind_param('ii', $postId, $userId);
         if($query->execute())
             return true;
         return false;
     }
     public static function downVote(int $postId, int $userId) : bool {
         global $db;
-        $query = $db->prepare("INSERT INTO vote VALUES (NULL, -1, ?)");
-        $query->bind_param('i', $userId);
+        $query = $db->prepare("INSERT INTO vote VALUES (NULL, ?, -1, ?)");
+        $query->bind_param('ii', $postId, $userId);
         if($query->execute())
             return true;
         return false;
     }
     public static function getScore(int $postId) : int {
-        //zwróć sumę głosów dla danaego posta
-
-
-        //tymczasowo
+        global $db;
+        //zwróć sumę głosów dla danego posta
+        $query = $db->prepare("SELECT SUM(value) FROM vote WHERE post_id = ?");
+        $query->bind_param('i', $postId);
+        if($query->execute()){
+            $result = $query->get_result();
+            $score = $result->fetch_row()[0];
+            return $score;
+        }
         return 0;
     }
     
