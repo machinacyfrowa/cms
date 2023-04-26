@@ -10,6 +10,8 @@ class Post {
     private string $authorName;
     //wynik punktowy mema
     private int $score;
+    //głos oddany przez użytkownika (o ile zalogowany)
+    private int $vote;
 
     function __construct(int $i, string $f, string $t, string $title, int $authorId ) {
         $this->id = $i;
@@ -21,6 +23,10 @@ class Post {
         global $db;
         $this->authorName = User::getNameById($this->authorId);
         $this->score = Vote::getScore($this->id);
+        if(User::isAuth())
+            $this->vote = Vote::getVote($this->id, $_SESSION['user']->getId());
+        else 
+            $this->vote = 0;
     }
 
     public function getId() : int {
@@ -40,6 +46,9 @@ class Post {
     }
     public function getScore() : int {
         return $this->score;
+    }
+    public function getVote() : int {
+        return $this->vote;
     }
 
     //funkcja zwraca ostatnio dodany obrazek
