@@ -8,6 +8,8 @@ class Post {
     private int $authorId;
     //nazwa użytkownika autora mema
     private string $authorName;
+    //wynik punktowy mema
+    private int $score;
 
     function __construct(int $i, string $f, string $t, string $title, int $authorId ) {
         $this->id = $i;
@@ -18,6 +20,7 @@ class Post {
         //pobierz z bazy danych imię / login autora posta
         global $db;
         $this->authorName = User::getNameById($this->authorId);
+        $this->score = Vote::getScore($this->id);
     }
 
     public function getId() : int {
@@ -34,6 +37,9 @@ class Post {
     }
     public function getAuthorName() : string {
         return $this->authorName;
+    }
+    public function getScore() : int {
+        return $this->score;
     }
 
     //funkcja zwraca ostatnio dodany obrazek

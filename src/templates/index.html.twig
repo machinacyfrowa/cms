@@ -9,6 +9,7 @@
     <div id="post">
         <h2>{{ post.getTitle() }} </h2>
         <img src="{{ post.getFilename() }}">
+        <h6>Punkty: {{post.getScore() }}</h6>
         <h6>Autor: {{post.getAuthorName() }}</h6>
         <h6>Data dodania: {{ post.getTimestamp() }} </h6>
     </div>
